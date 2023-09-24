@@ -11,6 +11,7 @@ export default function App() {
     { Day: "Sunday", Time: "t87ime" },
     { Day: "Monday", Time: "tim3e" },
     { Day: "Friday", Time: "tim00e" },
+    { Day: "Friday", Time: "tim010e" },
   ];
   const groupedData = {};
 
