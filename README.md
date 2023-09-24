@@ -5,12 +5,14 @@
 The Medicine Tracker App is a user-friendly solution to help individuals manage their medication schedules effectively. It allows users to log in, set medication names, specify the time and day, and receive timely notifications, ensuring they never miss a dose.
 
 ## Prototype Design for PillPal Web App
-![Untitled – Figma - Google Chrome 24-09-2023 20_26_16](https://github.com/ResponseTime/PillPal/assets/80978976/4fc4d2d1-4035-41eb-847d-197fec10908a)
+![Untitled – Figma - Google Chrome 24-09-2023 22_44_30](https://github.com/ResponseTime/PillPal/assets/80978976/1df207b2-5da1-4347-a71d-9803e7411eb8)
+
 
 
 
 ## Prototype Design for PillPal Mobile App
-![Untitled – Figma - Google Chrome 24-09-2023 20_23_35](https://github.com/ResponseTime/PillPal/assets/80978976/6705f36b-0148-4c85-87a9-ff4fbc66e377)
+
+![Untitled – Figma - Google Chrome 24-09-2023 22_43_45](https://github.com/ResponseTime/PillPal/assets/80978976/cbc50dda-d9f2-44e4-9f3e-323b4ae9f92f)
 
 
 
