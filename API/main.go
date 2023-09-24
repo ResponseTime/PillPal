@@ -20,13 +20,7 @@ var albums = []album{
 }
 
 func getAlbums(c *gin.Context) {
-	var al = []album{}
-	for _, e := range albums {
-		if e.Title == "kaisen" {
-			al = append(al, e)
-		}
-	}
-	c.IndentedJSON(http.StatusOK, al)
+	c.IndentedJSON(http.StatusOK, albums)
 }
 func main() {
 	router := gin.Default()
