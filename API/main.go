@@ -22,7 +22,7 @@ var albums = []album{
 func getAlbums(c *gin.Context) {
 	var al = []album{}
 	for _, e := range albums {
-		if e.Title == "Nigga" {
+		if e.Title == "kaisen" {
 			al = append(al, e)
 		}
 	}
