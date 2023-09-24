@@ -1,0 +1,17 @@
+.shower{
+    display:flex;
+    /* flex-flow: row wrap; */
+    justify-content: space-between;
+    
+}
+.day{
+    width: 150px;
+    background-color: red;
+}
+.show{
+    display: block;
+}
+.act{
+    background-color: grey;
+    margin-top: 20px;
+}
