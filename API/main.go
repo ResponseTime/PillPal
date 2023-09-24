@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/robfig/cron/v3"
 )
 
 type album struct {
@@ -20,11 +22,30 @@ var albums = []album{
 }
 
 func getAlbums(c *gin.Context) {
+
 	c.IndentedJSON(http.StatusOK, albums)
+}
+func setSchedule(c *gin.Context) {
+	item := c.Param("item")
+	cron := cron.New()
+	cron.AddFunc("@every 1m", func() { fmt.Println("reminder for ", item) })
+	cron.Start()
+	st := struct {
+		Item string
+		Set  bool
+	}{Item: item, Set: true}
+	c.IndentedJSON(http.StatusOK, st)
 }
 func main() {
 	router := gin.Default()
 	router.GET("api/albums", getAlbums)
-
+	router.GET("api/set/:item", setSchedule)
 	router.Run("localhost:8080")
+
 }
+
+// func inspect(entry []cron.Entry) {
+// 	for _, entry := range entry {
+// 		fmt.Println(entry.Job)
+// 	}
+// }
