@@ -11,9 +11,17 @@ import (
 var entries = make(map[string]cron.EntryID)
 var cronI *cron.Cron
 
+func main() {
+	cronI = cron.New()
+	router := gin.Default()
+	router.GET("api/set/:item", setSchedule)
+	router.GET("api/del/:item", delSchedule)
+	router.Run("localhost:8080")
+
+}
+
 func setSchedule(c *gin.Context) {
 	item := c.Param("item")
-
 	id, _ := cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", item) })
 	entries[item] = id
 	cronI.Start()
@@ -28,12 +36,4 @@ func delSchedule(c *gin.Context) {
 	item := c.Param("item")
 	cronI.Remove(entries[item])
 	c.IndentedJSON(http.StatusOK, "done")
-}
-func main() {
-	cronI = cron.New()
-	router := gin.Default()
-	router.GET("api/set/:item", setSchedule)
-	router.GET("api/del/:item", delSchedule)
-	router.Run("localhost:8080")
-
 }
