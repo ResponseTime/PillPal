@@ -4,13 +4,16 @@
   "description": "Auth system for pillpal",
   "main": "app.js",
   "scripts": {
-    "test": ""
+    "test": "",
+    "start": "nodemon app.js"
   },
   "author": "ResponseTime",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.1.0"
   },
   "devDependencies": {

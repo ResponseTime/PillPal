@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
 )
@@ -14,6 +15,7 @@ var cronI *cron.Cron
 func main() {
 	cronI = cron.New()
 	router := gin.Default()
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	router.GET("api/set/:item", setSchedule)
 	router.GET("api/del/:item", delSchedule)
 	router.Run("localhost:8080")
