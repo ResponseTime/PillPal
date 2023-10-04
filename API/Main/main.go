@@ -16,8 +16,9 @@ func main() {
 	cronI = cron.New()
 	router := gin.Default()
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
-	router.GET("api/set/:item", setSchedule)
-	router.GET("api/del/:item", delSchedule)
+	router.POST("api/set/:item", setSchedule)
+	router.POST("api/del/:item", delSchedule)
+	router.POST("api/test", testRoute)
 	router.Run("localhost:8080")
 
 }
@@ -38,4 +39,23 @@ func delSchedule(c *gin.Context) {
 	item := c.Param("item")
 	cronI.Remove(entries[item])
 	c.IndentedJSON(http.StatusOK, "done")
+}
+
+func testRoute(c *gin.Context) {
+	var data struct {
+		Param1 string `json:"param1"`
+		Param2 int    `json:"param2"`
+	}
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	param1 := data.Param1
+	param2 := data.Param2
+	c.JSON(http.StatusOK, gin.H{
+		"param1": param1,
+		"param2": param2,
+	})
 }
