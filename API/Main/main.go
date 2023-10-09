@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
@@ -24,14 +26,43 @@ func main() {
 }
 
 func setSchedule(c *gin.Context) {
-	item := c.Param("item")
-	id, _ := cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", item) })
-	entries[item] = id
+	var dataNeeded struct {
+		Medication string `json:"medication"`
+		Time       string `json:"time"`
+		Frequency  string `json:"frequency"`
+	}
+	if err := c.ShouldBindJSON(&dataNeeded); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	parsedTime, err := time.Parse(time.RFC3339, dataNeeded.Time)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time format"})
+		return
+	}
+	switch strings.ToLower(dataNeeded.Frequency) {
+	case "once":
+		{
+		}
+	case "daily":
+		{
+		}
+	case "weekly":
+		{
+		}
+	}
+	id, _ := cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
+	fmt.Println(id)
 	cronI.Start()
 	st := struct {
-		Item string
-		Set  bool
-	}{Item: item, Set: true}
+		Item struct {
+			Medication string `json:"medication"`
+			Time       string `json:"time"`
+			Frequency  string `json:"frequency"`
+		}
+		Set bool
+	}{Item: dataNeeded, Set: true}
 	c.IndentedJSON(http.StatusOK, st)
 }
 
