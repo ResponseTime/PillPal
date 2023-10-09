@@ -18,12 +18,17 @@ func main() {
 	cronI = cron.New()
 	router := gin.Default()
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
-	router.POST("api/set/:item", setSchedule)
-	router.POST("api/del/:item", delSchedule)
+	router.GET("/api/main", dataHandler)
+	router.POST("api/set/", setSchedule)
+	router.DELETE("api/del/", delSchedule)
+	router.PATCH("/api/edit", editSchedule)
 	router.POST("api/test", testRoute)
 	router.Run("localhost:8080")
 
 }
+func editSchedule(c *gin.Context) {}
+
+func dataHandler(c *gin.Context) {}
 
 func setSchedule(c *gin.Context) {
 	var dataNeeded struct {
