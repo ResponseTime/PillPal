@@ -46,18 +46,22 @@ func setSchedule(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time format"})
 		return
 	}
+	var id cron.EntryID
 	switch strings.ToLower(dataNeeded.Frequency) {
 	case "once":
 		{
+			id, _ = cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
 		}
 	case "daily":
 		{
+			id, _ = cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
 		}
 	case "weekly":
 		{
+			id, _ = cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
 		}
 	}
-	id, _ := cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
+
 	fmt.Println(id)
 	cronI.Start()
 	st := struct {
