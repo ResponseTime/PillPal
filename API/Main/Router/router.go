@@ -11,8 +11,8 @@ func SetupRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	router.GET("/api/main")
-	router.POST("api/set/", Scheduler.SetSchedule)
-	router.DELETE("api/del/", Scheduler.DelSchedule)
+	router.POST("/api/set", Scheduler.SetSchedule)
+	router.DELETE("/api/del/", Scheduler.DelSchedule)
 	router.PATCH("/api/edit", Scheduler.EditSchedule)
 	return router
 }

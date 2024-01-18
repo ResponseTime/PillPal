@@ -1,6 +1,8 @@
 package Scheduler
 
 import (
+	"api/Models"
+	"api/Utility"
 	"fmt"
 	"net/http"
 	"strings"
@@ -10,64 +12,46 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-var entries = make(map[string]cron.EntryID)
-var cronI *cron.Cron = cron.New()
-
 func EditSchedule(c *gin.Context) {}
 
 func SetSchedule(c *gin.Context) {
-	var dataNeeded struct {
-		Medication string `json:"medication"`
-		Time       string `json:"time"`
-		Frequency  string `json:"frequency"`
-	}
-	if err := c.ShouldBindJSON(&dataNeeded); err != nil {
+	var Data Models.Data
+	if err := c.ShouldBindJSON(&Data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	_, err := time.Parse(time.RFC3339, dataNeeded.Time)
-
+	scheduledTime, err := time.Parse(time.RFC3339, Data.Time)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time format"})
 		return
 	}
 	var id cron.EntryID
-	switch strings.ToLower(dataNeeded.Frequency) {
+	switch strings.ToLower(Data.Frequency) {
 	case "once":
 		{
-			id, _ = cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
+			id, _ = Utility.CronI.AddFunc(fmt.Sprintf("%d %d %d %d *", scheduledTime.Minute(), scheduledTime.Hour(), scheduledTime.Day(), int(scheduledTime.Month())), func() { fmt.Println("reminder for ", Data) })
 		}
 	case "daily":
 		{
-			id, _ = cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
+			id, _ = Utility.CronI.AddFunc(fmt.Sprintf("%d %d * * *", scheduledTime.Minute(), scheduledTime.Hour()), func() { fmt.Println("reminder for ", Data) })
 		}
 	case "weekly":
 		{
-			id, _ = cronI.AddFunc("@every 1m", func() { fmt.Println("reminder for ", dataNeeded) })
+			id, _ = Utility.CronI.AddFunc(fmt.Sprintf("%d %d * * %d", scheduledTime.Minute(), scheduledTime.Hour(), scheduledTime.Weekday()), func() { fmt.Println("reminder for ", Data) })
 		}
 	}
 
-	fmt.Println(id)
-	cronI.Start()
-	st := struct {
-		Item struct {
-			Medication string `json:"medication"`
-			Time       string `json:"time"`
-			Frequency  string `json:"frequency"`
-		}
-		Set bool
-	}{Item: dataNeeded, Set: true}
-	c.IndentedJSON(http.StatusOK, st)
+	Utility.CronI.Start()
+	fmt.Println(id, Utility.CronI.Entries())
+	c.IndentedJSON(http.StatusOK, gin.H{"success": true})
 }
 
 func DelSchedule(c *gin.Context) {
-	var dataNeeded struct {
-		Id string `json:"medication"`
-	}
-	if err := c.ShouldBindJSON(&dataNeeded); err != nil {
+	var Med Models.Med
+	if err := c.ShouldBindJSON(&Med); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	cronI.Remove(entries[dataNeeded.Id])
+	Utility.CronI.Remove(Utility.Entries[Med.Id])
 	c.IndentedJSON(http.StatusOK, "done")
 }
