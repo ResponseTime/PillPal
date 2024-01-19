@@ -5,6 +5,7 @@ import (
 	"api/Utility"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -42,16 +43,14 @@ func SetSchedule(c *gin.Context) {
 	}
 
 	Utility.CronI.Start()
-	fmt.Println(id, Utility.CronI.Entries())
-	c.IndentedJSON(http.StatusOK, gin.H{"success": true})
+	Utility.Entries[Data.Medication+strconv.Itoa(int(id))] = id
+	fmt.Println(Utility.CronI.Entries())
+	c.IndentedJSON(http.StatusOK, gin.H{"id": Data.Medication + strconv.Itoa(int(id))})
 }
 
 func DelSchedule(c *gin.Context) {
-	var Med Models.Med
-	if err := c.ShouldBindJSON(&Med); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	Utility.CronI.Remove(Utility.Entries[Med.Id])
-	c.IndentedJSON(http.StatusOK, "done")
+	k := c.Params.ByName("id")
+	Utility.CronI.Remove(Utility.Entries[k])
+	fmt.Println(Utility.CronI.Entries())
+	c.IndentedJSON(http.StatusOK, gin.H{"success": true})
 }
